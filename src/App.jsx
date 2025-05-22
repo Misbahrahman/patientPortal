@@ -61,20 +61,17 @@ function App() {
 
   const feedData = async (patientData) => {
     try {
-      await db.exec({
-        sql: `
+      await db.exec(`
         INSERT INTO patients (firstName, lastName, dateOfBirth, gender, contactNumber, email)
-        VALUES ($1, $2, $3, $4, $5, $6);
-      `,
-        args: [
-          patientData.firstName,
-          patientData.lastName,
-          patientData.dateOfBirth,
-          patientData.gender,
-          patientData.contactNumber,
-          patientData.email,
-        ],
-      });
+        VALUES (
+          '${patientData.firstName}', 
+          '${patientData.lastName}', 
+          '${patientData.dateOfBirth}', 
+          '${patientData.gender}', 
+          '${patientData.contactNumber}', 
+          '${patientData.email}'
+        );
+      `);
 
       setPatients([...patients, patientData]);
 
