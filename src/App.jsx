@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PatientCard from "./components/PatientCard";
-import PatientModal from "./components/PatientModal";  
+import PatientModal from "./components/PatientModal";
 import Loader from "./components/Loader";
 import { PGlite } from "@electric-sql/pglite";
 
@@ -61,17 +61,20 @@ function App() {
 
   const feedData = async (patientData) => {
     try {
-      await db.exec(`
+      await db.exec({
+        sql: `
         INSERT INTO patients (firstName, lastName, dateOfBirth, gender, contactNumber, email)
-        VALUES (
-          '${patientData.firstName}', 
-          '${patientData.lastName}', 
-          '${patientData.dateOfBirth}', 
-          '${patientData.gender}', 
-          '${patientData.contactNumber}', 
-          '${patientData.email}'
-        );
-      `);
+        VALUES ($1, $2, $3, $4, $5, $6);
+      `,
+        args: [
+          patientData.firstName,
+          patientData.lastName,
+          patientData.dateOfBirth,
+          patientData.gender,
+          patientData.contactNumber,
+          patientData.email,
+        ],
+      });
 
       setPatients([...patients, patientData]);
 
@@ -145,28 +148,39 @@ function App() {
 
   return (
     <div className="app-container">
+      <header className="page-header">
+        <h1 className="page-title">Patient Management System</h1>
+      </header>
+
       <section className="header">
         <div className="query-container">
           <h2>Write your query</h2>
           <div className="search-controls">
-            <input
-              type="text"
+            <textarea
               value={query}
               onChange={handleQueryChange}
-              placeholder="Search patients..."
+              placeholder="Write your SQL query here...
+Example:
+SELECT * FROM patients;
+SELECT * FROM patients WHERE gender = 'Female';
+SELECT firstName, lastName FROM patients WHERE contactNumber IS NOT NULL;"
+              rows={6}
             />
-            <button className="execute-button" onClick={executeQuery}>
-              Execute
-            </button>
           </div>
         </div>
 
-        <button
-          className="new-patient-button"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Add New Patient
-        </button>
+        <div className="button-group">
+          <button className="execute-button" onClick={executeQuery}>
+            Execute Query
+          </button>
+
+          <button
+            className="new-patient-button"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Add New Patient
+          </button>
+        </div>
       </section>
 
       {loading ? (
