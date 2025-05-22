@@ -91,7 +91,7 @@ function App() {
     const initDb = async () => {
       try {
         setLoading(true);
-        const dbInstance = new PGlite("idb://patient-db-test1");
+        const dbInstance = new PGlite("idb://patient-db");
         await dbInstance.waitReady;
         setDb(dbInstance);
 

@@ -1,6 +1,3 @@
-import React from 'react';
-
-
 const Loader = ({ message = '' }) => {
   return (
     <div className="loader-container">
