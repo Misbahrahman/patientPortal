@@ -11,7 +11,7 @@ function App() {
   const [db, setDb] = useState(null);
   const [isDbReady, setIsDbReady] = useState(false);
 
-  const [isInitializing, setIsInitializing] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const handleQueryChange = (e) => {
     setQuery(e.target.value);
@@ -90,7 +90,7 @@ function App() {
   useEffect(() => {
     const initDb = async () => {
       try {
-        setIsInitializing(true);
+        setLoading(true);
         const dbInstance = new PGlite("idb://patient-db-test1");
         await dbInstance.waitReady;
         setDb(dbInstance);
@@ -101,7 +101,7 @@ function App() {
       } catch (error) {
         console.error("Database initialization failed:", error);
       } finally {
-        setIsInitializing(false);
+        setLoading(false);
       }
     };
 
@@ -169,7 +169,7 @@ function App() {
         </button>
       </section>
 
-      {isInitializing ? (
+      {loading ? (
         <div className="app-container">
           <div className="loading-container">
             <Loader size="large" message="Initializing database..." />
